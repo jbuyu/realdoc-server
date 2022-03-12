@@ -1,5 +1,5 @@
 const express = require("express");
-const { errorHanlder } = require("./middleware/errorMiddleware");
+const { errorHandler } = require("./middleware/errorMiddleware");
 const colors = require("colors");
 const connectDB = require("./config/db");
 
@@ -17,7 +17,7 @@ app.use("/api/consultations", require("./routes/consultationRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
 //overridesd the default express errors
-app.use(errorHanlder);
+app.use(errorHandler);
 
 app.listen(port, () => {
   console.log("Server is starting on port: ", port);

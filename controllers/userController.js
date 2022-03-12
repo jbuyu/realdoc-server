@@ -1,4 +1,6 @@
 const asyncHandler = require("express-async-handler");
+const jwt = require('jsonwebtoken')
+
 const bcrypt = require("bcryptjs");
 const User = require("../models/userModel");
 
@@ -20,9 +22,8 @@ const getUser = asyncHandler(async (req, res) => {
   }
 });
 const getMe = asyncHandler(async (req, res) => {
-  res.send({
-    message: "Found me",
-  });
+  res.status(200).json(req.user)
+
 });
 
 const registerUser = asyncHandler(async (req, res) => {
@@ -53,6 +54,7 @@ const registerUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
     });
   } else {
     res.status(400);
@@ -77,10 +79,12 @@ const loginUser = asyncHandler(async (req, res) => {
       _id: user.id,
       name: user.name,
       email: user.email,
+      token: generateToken(user._id),
+
     });
   } else {
     res.status(400);
-    throw new Error('Invalid Credentials')
+    throw new Error("Invalid Credentials");
   }
 });
 
@@ -109,6 +113,13 @@ const deleteUser = asyncHandler(async (req, res) => {
     id: req.params.id,
   });
 });
+
+//Generate JWT
+const generateToken = (id) => {
+  return jwt.sign({ id }, process.env.JWT_SECRET, {
+    expiresIn: "30d",
+  });
+};
 
 module.exports = {
   getUsers,
