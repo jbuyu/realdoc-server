@@ -1,30 +1,53 @@
 const asyncHandler = require("express-async-handler");
+const Consultation = require("../models/consultationModel");
 
 const getConsultations = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    message: "Get consultations",
-  });
+  const consultations = await Consultation.find();
+  res.status(200).send(consultations);
 });
 
-const createConsultations = asyncHandler(async (req, res) => {
-  if (!require.body.message) {
-    throw new Error("Please add a text field");
+const createConsultation = asyncHandler(async (req, res) => {
+  try {
+    const consultation = await Consultation.create(req.body);
+    res.status(201).json(consultation);
+    console.log("created");
+  } catch (error) {
+    res.status(500).json(error);
   }
 });
-const updateConsultations = asyncHandler(async (req, res) => {
-  res.status(200).json({
-    message: "Update consultations",
-  });
+
+const updateConsultation = asyncHandler(async (req, res) => {
+  const consultation = Consultation.findById(req.params.id);
+  if (!consultation) {
+    res.status(400);
+    throw new Error("Consultation not found");
+  }
+  const updatedConsultation = await Consultation.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {
+      new: true,
+    }
+  );
+  res.status(200).json(updatedConsultation);
 });
-const deleteConsultations = asyncHandler(async (req, res) => {
+
+const deleteConsultation = asyncHandler(async (req, res) => {
+  const consultation = Consultation.findById(req.params.id);
+  if (!consultation) {
+    console.log('none');
+    res.status(400);
+    throw new Error("Consultation not found");
+  }
+  await consultation.findOneAndRemove();
   res.status(200).json({
-    message: "Delete consultations",
-  });
+    id: req.params.id
+  })
 });
 
 module.exports = {
   getConsultations,
-  createConsultations,
-  updateConsultations,
-  deleteConsultations,
+  createConsultation,
+  updateConsultation,
+  deleteConsultation,
 };

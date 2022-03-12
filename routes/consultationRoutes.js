@@ -1,14 +1,14 @@
 const express = require("express");
 const {
   getConsultations,
-  updateConsultations,
-  createConsultations,
-  deleteConsultations,
+  updateConsultation,
+  createConsultation,
+  deleteConsultation,
 } = require("../controllers/consultationControllers");
 
 const router = express.Router();
 
-router.route("/").get(getConsultations).post(createConsultations);
-router.route("/id").put(updateConsultations).delete(deleteConsultations);
+router.route("/").get(getConsultations).post(createConsultation);
+router.route("/:id").put(updateConsultation).delete(deleteConsultation);
 
 module.exports = router;
