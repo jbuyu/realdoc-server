@@ -1,24 +1,26 @@
-const getConsultations = async (req, res) => {
+const asyncHandler = require("express-async-handler");
+
+const getConsultations = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Get consultations",
   });
-};
+});
 
-const createConsultations = async (req, res) => {
+const createConsultations = asyncHandler(async (req, res) => {
   if (!require.body.message) {
     throw new Error("Please add a text field");
   }
-};
-const updateConsultations = async (req, res) => {
+});
+const updateConsultations = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Update consultations",
   });
-};
-const deleteConsultations = async (req, res) => {
+});
+const deleteConsultations = asyncHandler(async (req, res) => {
   res.status(200).json({
     message: "Delete consultations",
   });
-};
+});
 
 module.exports = {
   getConsultations,
