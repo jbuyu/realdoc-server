@@ -14,6 +14,7 @@ const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use("/api/consultations", require("./routes/consultationRoutes"));
+app.use("/api/users", require("./routes/userRoutes"));
 
 //overridesd the default express errors
 app.use(errorHanlder);

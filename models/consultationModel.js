@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 
 const ConsultationSchema = new mongoose.Schema(
   {
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+    },
     firstName: {
       type: String,
       required: true,
@@ -47,4 +51,4 @@ const ConsultationSchema = new mongoose.Schema(
   }
 );
 
-module.exports = mongoose.model('Consultation', ConsultationSchema)
+module.exports = mongoose.model("Consultation", ConsultationSchema);
