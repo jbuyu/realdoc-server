@@ -6,6 +6,11 @@ const getConsultations = asyncHandler(async (req, res) => {
   res.status(200).send(consultations);
 });
 
+const getDoctorConsultations = asyncHandler(async (req, res) => {
+  const consultations = await Consultation.find({ user: req.user.id });
+  res.status(200).send(consultations);
+});
+
 const createConsultation = asyncHandler(async (req, res) => {
   try {
     const consultation = await Consultation.create(req.body);
@@ -35,14 +40,14 @@ const updateConsultation = asyncHandler(async (req, res) => {
 const deleteConsultation = asyncHandler(async (req, res) => {
   const consultation = Consultation.findById(req.params.id);
   if (!consultation) {
-    console.log('none');
+    console.log("none");
     res.status(400);
     throw new Error("Consultation not found");
   }
   await consultation.findOneAndRemove();
   res.status(200).json({
-    id: req.params.id
-  })
+    id: req.params.id,
+  });
 });
 
 module.exports = {
@@ -50,4 +55,5 @@ module.exports = {
   createConsultation,
   updateConsultation,
   deleteConsultation,
+  getDoctorConsultations
 };
