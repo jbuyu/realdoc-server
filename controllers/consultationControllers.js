@@ -10,7 +10,7 @@ const getConsultation = asyncHandler(async (req, res) => {
   const consultationId = req.params.id;
   try {
     const consultation = await Consultation.find({ _id: consultationId });
-    res.status(200).send(consultation);
+    res.status(200).send(consultation[0]);
   } catch (error) {
     throw new Error("Consultation not found");
   }
