@@ -18,6 +18,12 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/consultations", require("./routes/consultationRoutes"));
 app.use("/api/users", require("./routes/userRoutes"));
 
+app.use("/hello", (req, res) => {
+  res.send({
+    message: "aluria",
+  });
+});
+
 //overridesd the default express errors
 app.use(errorHandler);
 
