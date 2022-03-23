@@ -5,6 +5,7 @@ const {
   createConsultation,
   deleteConsultation,
   getDoctorConsultations,
+  getConsultation,
 } = require("../controllers/consultationControllers");
 const { protect } = require("../middleware/authMiddleware");
 
@@ -16,6 +17,7 @@ router
   .post(createConsultation);
 router
   .route("/:id")
+  .get(protect, getConsultation)
   .put(protect, updateConsultation)
   .delete(protect, deleteConsultation);
 

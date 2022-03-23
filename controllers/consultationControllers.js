@@ -6,6 +6,16 @@ const getConsultations = asyncHandler(async (req, res) => {
   res.status(200).send(consultations);
 });
 
+const getConsultation = asyncHandler(async (req, res) => {
+  const consultationId = req.params.id;
+  try {
+    const consultation = await Consultation.find({ _id: consultationId });
+    res.status(200).send(consultation);
+  } catch (error) {
+    throw new Error("Consultation not found");
+  }
+});
+
 const getDoctorConsultations = asyncHandler(async (req, res) => {
   const consultations = await Consultation.find({ user: req.user.id });
   res.status(200).send(consultations);
@@ -28,16 +38,16 @@ const updateConsultation = asyncHandler(async (req, res) => {
     throw new Error("Consultation not found");
   }
 
-   // Check for user
-   if (!req.user) {
-    res.status(401)
-    throw new Error('User not found')
+  // Check for user
+  if (!req.user) {
+    res.status(401);
+    throw new Error("User not found");
   }
 
   // Make sure the logged in user matches the goal user
   if (consultation.user.toString() !== req.user.id) {
-    res.status(401)
-    throw new Error('User not authorized')
+    res.status(401);
+    throw new Error("User not authorized");
   }
   const updatedConsultation = await Consultation.findByIdAndUpdate(
     req.params.id,
@@ -64,8 +74,9 @@ const deleteConsultation = asyncHandler(async (req, res) => {
 
 module.exports = {
   getConsultations,
+  getConsultation,
   createConsultation,
   updateConsultation,
   deleteConsultation,
-  getDoctorConsultations
+  getDoctorConsultations,
 };
