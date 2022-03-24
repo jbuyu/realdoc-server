@@ -17,8 +17,32 @@ const getConsultation = asyncHandler(async (req, res) => {
 });
 
 const getDoctorConsultations = asyncHandler(async (req, res) => {
-  const consultations = await Consultation.find({ user: req.user.id });
-  res.status(200).send(consultations);
+  try {
+    const consultations = await Consultation.find({ user: req.user.id });
+    res.status(200).send(consultations);
+  } catch (error) {
+    throw new Error("Consultation not found");
+  }
+});
+
+//pending consultations
+const getPendingConsultations = asyncHandler(async (req, res) => {
+  try {
+    const consultations = await Consultation.find({ status: "Pending" });
+    res.status(200).send(consultations);
+  } catch (error) {
+    throw new Error("Consultation not found");
+  }
+});
+
+//completed consultations
+const getCompletedConsultations = asyncHandler(async (req, res) => {
+  try {
+    const consultations = await Consultation.find({ status: "Completed" });
+    res.status(200).send(consultations);
+  } catch (error) {
+    throw new Error("Consultation not found");
+  }
 });
 
 const createConsultation = asyncHandler(async (req, res) => {
@@ -45,10 +69,10 @@ const updateConsultation = asyncHandler(async (req, res) => {
   }
 
   // Make sure the logged in user matches the goal user
-  if (consultation.user.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("User not authorized");
-  }
+  // if (consultation.user.toString() !== req.user.id) {
+  //   res.status(401);
+  //   throw new Error("User not authorized");
+  // }
   const updatedConsultation = await Consultation.findByIdAndUpdate(
     req.params.id,
     req.body,
@@ -79,4 +103,6 @@ module.exports = {
   updateConsultation,
   deleteConsultation,
   getDoctorConsultations,
+  getPendingConsultations,
+  getCompletedConsultations
 };
