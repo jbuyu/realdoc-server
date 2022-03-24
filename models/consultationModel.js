@@ -45,9 +45,9 @@ const ConsultationSchema = new mongoose.Schema(
       required: true,
       maxlength: 40,
     },
-    pending: {
-      type: Boolean,
-      default: true,
+    status: {
+      type: String,
+      default: "pending",
     },
   },
   {
