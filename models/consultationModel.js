@@ -49,6 +49,9 @@ const ConsultationSchema = new mongoose.Schema(
       type: String,
       default: "Pending",
     },
+    diagnosis: {
+      type: String,
+    },
   },
   {
     timestamps: true,
