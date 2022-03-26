@@ -51,6 +51,7 @@ const ConsultationSchema = new mongoose.Schema(
     },
     diagnosis: {
       type: String,
+      default:""
     },
   },
   {
