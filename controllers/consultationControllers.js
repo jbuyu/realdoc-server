@@ -1,6 +1,8 @@
 const asyncHandler = require("express-async-handler");
 const Consultation = require("../models/consultationModel");
-const messagebird = require("messagebird")(`${process.env.MESSAGE_KEY}`);
+const twilio = require("twilio");
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
 
 const getConsultations = asyncHandler(async (req, res) => {
   const consultations = await Consultation.find();
@@ -51,25 +53,26 @@ const createConsultation = asyncHandler(async (req, res) => {
     const consultation = await Consultation.create(req.body);
     res.status(201).json(consultation);
 
+    let { firstName, lastName, symptoms, consulationType } = consultation;
+    let smsData = {
+      firstName,
+      lastName,
+      symptoms,
+      consulationType,
+    };
+    let stringedData = JSON.stringify(smsData);
+
     //messaging
-    messagebird.messages.create(
-      {
-        originator: "+254700249154",
-        recipients: ["+254700249154"],
-        body: consultation.symptoms,
-      },
-      function (err, response) {
-        if (err) {
-          // Request has failed
-          console.log(err);
-          res.send("Error occured while sending message!");
-        } else {
-          // Request was successful
-          console.log("success", response);
-          // res.redirect("/");
-        }
-      }
-    );
+    const client = twilio(accountSid, authToken);
+
+    client.messages
+      .create({
+        to: process.env.TWILIO_TO,
+        from: process.env.TWILIO_FROM,
+        body: stringedData,
+      })
+      .then((message) => console.log(`Message SID ${message.sid}`))
+      .catch((error) => console.error(error));
   } catch (error) {
     console.log("error", error);
     res.status(500).json(error);
