@@ -1,5 +1,6 @@
 const asyncHandler = require("express-async-handler");
 const Consultation = require("../models/consultationModel");
+const messagebird = require("messagebird")(`${process.env.MESSAGE_KEY}`);
 
 const getConsultations = asyncHandler(async (req, res) => {
   const consultations = await Consultation.find();
@@ -49,8 +50,28 @@ const createConsultation = asyncHandler(async (req, res) => {
   try {
     const consultation = await Consultation.create(req.body);
     res.status(201).json(consultation);
-    console.log("created");
+
+    //messaging
+    messagebird.messages.create(
+      {
+        originator: "+254700249154",
+        recipients: ["+254700249154"],
+        body: consultation.symptoms,
+      },
+      function (err, response) {
+        if (err) {
+          // Request has failed
+          console.log(err);
+          res.send("Error occured while sending message!");
+        } else {
+          // Request was successful
+          console.log("success", response);
+          // res.redirect("/");
+        }
+      }
+    );
   } catch (error) {
+    console.log("error", error);
     res.status(500).json(error);
   }
 });
@@ -104,5 +125,5 @@ module.exports = {
   deleteConsultation,
   getDoctorConsultations,
   getPendingConsultations,
-  getCompletedConsultations
+  getCompletedConsultations,
 };

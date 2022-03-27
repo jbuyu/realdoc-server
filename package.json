@@ -14,7 +14,9 @@
     "express": "^4.17.3",
     "express-async-handler": "^1.2.0",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.2.5"
+    "messagebird": "^3.7.2",
+    "mongoose": "^6.2.5",
+    "nodemailer": "^6.7.3"
   },
   "devDependencies": {
     "nodemon": "^2.0.15"
