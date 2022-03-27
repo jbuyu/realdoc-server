@@ -2,6 +2,7 @@ const asyncHandler = require("express-async-handler");
 const Consultation = require("../models/consultationModel");
 
 const getConsultations = asyncHandler(async (req, res) => {
+  console.log("alire")
   const consultations = await Consultation.find();
   res.status(200).send(consultations);
 });
@@ -17,6 +18,7 @@ const getConsultation = asyncHandler(async (req, res) => {
 });
 
 const getDoctorConsultations = asyncHandler(async (req, res) => {
+  console.log("doc consulattions", req.user);
   try {
     const consultations = await Consultation.find({ user: req.user.id });
     res.status(200).send(consultations);
