@@ -79,15 +79,13 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
-    console.log(user)
-    res.json(
-      {
+    console.log(user);
+    res.json({
       _id: user.id,
       name: user.firstname,
       email: user.email,
       token: generateToken(user._id),
-    }
-    );
+    });
   } else {
     res.status(400);
     throw new Error("Invalid Credentials");
@@ -95,16 +93,39 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  const user = User.findById(req.params.id);
-
-  if (!user) {
-    res.status(400);
-    throw new Error("User not found");
+  console.log("updating", req.params.id);
+  try {
+    let oldPassword = req.body.oldPassword;
+    let newPassword = req.body.newPassword;
+    const user = await User.findById(req.params.id);
+    // res.status(200).send(user);
+    if (!user) {
+      res.status(400);
+      throw new Error("User not found");
+    }
+    let isPassword = await bcrypt.compare(oldPassword, user.password);
+    if (isPassword) {
+      console.log("right pass");
+      const salt = await bcrypt.genSalt(10);
+      const hashedPassword = await bcrypt.hash(newPassword, salt);
+      user.password = hashedPassword;
+      const updatedUser = await user.save();
+      if (updatedUser) {
+        res.json({ message: "Successfull" });
+      } else {
+        res.status(400).send("error occured");
+        throw new Error("User not found");
+      }
+    } else {
+      res.status(400).send("wrong password");
+      throw new Error("Wrong password");
+    }
+    // const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
+    //   new: true,
+    // });
+  } catch (error) {
+    console.log("err", error);
   }
-  const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  });
-  res.status(200).json(updatedUser);
 });
 
 const deleteUser = asyncHandler(async (req, res) => {
