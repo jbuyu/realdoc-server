@@ -79,7 +79,7 @@ const loginUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
   if (user && (await bcrypt.compare(password, user.password))) {
-    console.log(user);
+    // console.log(user);
     res.json({
       _id: user.id,
       name: user.firstname,
@@ -93,11 +93,11 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const updateUser = asyncHandler(async (req, res) => {
-  console.log("updating", req.params.id);
   try {
+    let email = req.body.email;
     let oldPassword = req.body.oldPassword;
     let newPassword = req.body.newPassword;
-    const user = await User.findById(req.params.id);
+    const user = await User.findOne({ email });
     // res.status(200).send(user);
     if (!user) {
       res.status(400);
@@ -113,18 +113,15 @@ const updateUser = asyncHandler(async (req, res) => {
       if (updatedUser) {
         res.json({ message: "Successfull" });
       } else {
-        res.status(400).send("error occured");
+        res.status(400);
         throw new Error("User not found");
       }
     } else {
-      res.status(400).send("wrong password");
+      res.status(400);
       throw new Error("Wrong password");
     }
-    // const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, {
-    //   new: true,
-    // });
   } catch (error) {
-    console.log("err", error);
+    throw new Error(error);
   }
 });
 
