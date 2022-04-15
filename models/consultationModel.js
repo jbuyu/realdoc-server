@@ -21,9 +21,13 @@ const ConsultationSchema = new mongoose.Schema(
       required: true,
       maxlength: 60,
     },
-    email: {
+    location: {
       type: String,
       required: true,
+      maxlength: 60,
+    },
+    email: {
+      type: String,
       maxlength: 60,
     },
     gender: {
@@ -33,7 +37,6 @@ const ConsultationSchema = new mongoose.Schema(
     },
     dateOfBirth: {
       type: String,
-      required: true,
       maxlength: 60,
     },
     symptoms: {
@@ -51,7 +54,7 @@ const ConsultationSchema = new mongoose.Schema(
     },
     diagnosis: {
       type: String,
-      default:""
+      default: "",
     },
   },
   {
